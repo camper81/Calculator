@@ -15,9 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLineEdit" name="lineEdit"/>
-   </item>
-   <item>
     <widget class="QLineEdit" name="l_calculation">
      <property name="minimumSize">
       <size>

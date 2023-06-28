@@ -40,5 +40,6 @@ private:
     static const int maxNumbers = 12;
     Operations m_lastOper;
     void updateLineText();
+    void completePrevOperation();
 };
 #endif // CALCULATOR_H
