@@ -15,31 +15,24 @@ class Calculator : public QWidget
 {
     Q_OBJECT
     Q_ENUM(Operations)
-    Q_PROPERTY(Operations lastOper READ getOper WRITE setOper NOTIFY changeOper)
+    Q_PROPERTY(Operations m_currentOperation READ currentOperation WRITE setCurrentOperation NOTIFY onChangeOperation)
 
 public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
 
-    void addition();
-    void result();
-    void reset();
+    void completeOperation();
 
-    const Operations &getOper() const;
-    void setOper(const Operations &newLastOper);
+    void resetTextField();
+    bool checkTextField();
 
+    void onOperationClick();
+    void onNumpadClick();
 signals:
-    void changeOper();
+    void onChangeOperation();
 
 private:
     Ui::Widget *ui;
-    bool hasComma;
-    int numbersCount;
-    double preResult;
-
-    static const int maxNumbers = 12;
-    Operations m_lastOper;
-    void updateLineText();
-    void completePrevOperation();
+    Operations m_currentOperation;
 };
 #endif // CALCULATOR_H

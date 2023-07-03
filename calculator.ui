@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLineEdit" name="l_calculation">
+    <widget class="QLineEdit" name="eMain">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -30,13 +30,13 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="lyOperations" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QWidget" name="numpad" native="true">
+       <widget class="QWidget" name="gNumpad" native="true">
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
-          <widget class="QPushButton" name="b_num7">
+          <widget class="QPushButton" name="bNum7">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -54,7 +54,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="b_num8">
+          <widget class="QPushButton" name="bNum8">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -72,7 +72,7 @@
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QPushButton" name="b_num9">
+          <widget class="QPushButton" name="bNum9">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QPushButton" name="b_num4">
+          <widget class="QPushButton" name="bNum4">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -108,7 +108,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QPushButton" name="b_num5">
+          <widget class="QPushButton" name="bNum5">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -126,7 +126,7 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QPushButton" name="b_num6">
+          <widget class="QPushButton" name="bNum6">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -144,7 +144,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QPushButton" name="b_num1">
+          <widget class="QPushButton" name="bNum1">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -162,7 +162,7 @@
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QPushButton" name="b_num2">
+          <widget class="QPushButton" name="bNum2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -180,7 +180,7 @@
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QPushButton" name="b_num3">
+          <widget class="QPushButton" name="bNum3">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -198,7 +198,7 @@
           </widget>
          </item>
          <item row="3" column="2">
-          <widget class="QPushButton" name="b_comma">
+          <widget class="QPushButton" name="bComma">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -216,7 +216,7 @@
           </widget>
          </item>
          <item row="3" column="0" colspan="2">
-          <widget class="QPushButton" name="b_num0">
+          <widget class="QPushButton" name="bNum0">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -237,10 +237,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="opers" native="true">
+       <widget class="QWidget" name="gOperaions" native="true">
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
-          <widget class="QPushButton" name="b_div">
+          <widget class="QPushButton" name="bDivide">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -258,7 +258,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QPushButton" name="b_add">
+          <widget class="QPushButton" name="bPlus">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -276,7 +276,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="b_sub">
+          <widget class="QPushButton" name="bMinus">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -294,7 +294,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QPushButton" name="b_mul">
+          <widget class="QPushButton" name="bMulti">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -312,7 +312,7 @@
           </widget>
          </item>
          <item row="2" column="0" colspan="2">
-          <widget class="QPushButton" name="b_eql">
+          <widget class="QPushButton" name="bEquals">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
