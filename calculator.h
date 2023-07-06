@@ -2,6 +2,7 @@
 #define CALCULATOR_H
 
 #include <QWidget>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -10,13 +11,13 @@ QT_END_NAMESPACE
 class Calculator;
 
 enum class Operations{
-    unknown, add, sub, mul, div
+    unknown, initial, add, sub, mul, div
 };
 
 class State {
 public:
-    virtual void setState(Calculator* obj, State* new_state) = 0;
-    virtual void getResult(Calculator* obj) = 0;
+    virtual void setState(Calculator* obj, std::shared_ptr<State> new_state) = 0;
+    virtual void getResult(Calculator*);
     virtual ~State() {
 
     }
@@ -24,32 +25,34 @@ public:
 
 class Addition : public State {
 public:
-    void setState(Calculator* obj, State* new_state);
-    void getResult(Calculator* obj);
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
 };
 
 class Subtraction : public State {
 public:
-    void setState(Calculator* obj, State* new_state);
-    void getResult(Calculator* obj);
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
 };
 
 class Multiplication : public State {
 public:
-    void setState(Calculator* obj, State* new_state);
-    void getResult(Calculator* obj);
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
 };
 
 class Devision: public State {
 public:
-    void setState(Calculator* obj, State* new_state);
-    void getResult(Calculator* obj);
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
 };
 
 class Initial: public State {
 public:
-    void setState(Calculator* obj, State* new_state);
-    void getResult(Calculator* obj);
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void getResult(Calculator* obj) override;
+};
+
+class Unknown: public State {
+public:
+    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void getResult(Calculator* obj) override;
 };
 
 class Calculator : public QWidget
@@ -62,7 +65,7 @@ public:
 
     void onNumpadClick();
     void onOperatorClick();
-    void setState(State* state) {
+    void setState(std::shared_ptr<State> state) {
         m_state = state;
     }
     float getNumberFromTextField();
@@ -78,7 +81,7 @@ private:
 
     Ui::Widget *ui;
 
-    State* m_state;
+    std::shared_ptr<State> m_state;
     QString m_text;
     bool checkTextField(QString text);
     bool hasComma(QString text);
