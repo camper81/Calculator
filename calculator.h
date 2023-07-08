@@ -1,5 +1,4 @@
-#ifndef CALCULATOR_H
-#define CALCULATOR_H
+#pragma once
 
 #include <QWidget>
 #include <memory>
@@ -11,47 +10,45 @@ QT_END_NAMESPACE
 class Calculator;
 
 enum class Operations{
-    unknown, initial, add, sub, mul, div
+    AfterResult, Initialization, Addition, Subtraction, Multiplication, Division
 };
 
-class State {
+class IState {
 public:
-    virtual void setState(Calculator* obj, std::shared_ptr<State> new_state) = 0;
+    virtual void setState(Calculator* obj, std::shared_ptr<IState> new_state) = 0;
     virtual void getResult(Calculator*);
-    virtual ~State() {
-
-    }
+    virtual ~IState() = default;
 };
 
-class Addition : public State {
+class Addition : public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
 };
 
-class Subtraction : public State {
+class Subtraction : public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
 };
 
-class Multiplication : public State {
+class Multiplication : public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
 };
 
-class Devision: public State {
+class Division: public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
 };
 
-class Initial: public State {
+class Initial: public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
     void getResult(Calculator* obj) override;
 };
 
-class Unknown: public State {
+class AfterResult: public IState {
 public:
-    void setState(Calculator* obj, std::shared_ptr<State> new_state) override;
+    void setState(Calculator* obj, std::shared_ptr<IState> new_state) override;
     void getResult(Calculator* obj) override;
 };
 
@@ -63,28 +60,24 @@ public:
     Calculator(QWidget *parent = nullptr);
     ~Calculator();
 
-    void onNumpadClick();
-    void onOperatorClick();
-    void setState(std::shared_ptr<State> state) {
+    void setState(std::shared_ptr<IState> state) {
         m_state = state;
     }
+    void onNumpadClick();
+    void onOperatorClick();
     float getNumberFromTextField();
-    float getPreviousResult();
-    void setPreviousResult(float);
-    void resetTextField();
+    float getMidterm() const;
+    void setMidterm(float);
+    void resetNumberField();
     void setTextField(QString);
-signals:
-    void onChangeOperation();
-
 private:
-    const int MAX_TEXT_FIELD = 12;
-
     Ui::Widget *ui;
 
-    std::shared_ptr<State> m_state;
-    QString m_text;
+    const int MAX_TEXT_FIELD = 12;
+    std::shared_ptr<IState> m_state;
+    QString m_number_field;
+    float m_midterm;
+
     bool checkTextField(QString text);
     bool hasComma(QString text);
-    float m_prev_result;
 };
-#endif // CALCULATOR_H

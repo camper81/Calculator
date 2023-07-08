@@ -3,22 +3,21 @@
 #include <QDebug>
 #include <unordered_map>
 
-std::unordered_map<Operations, std::shared_ptr<State>> states {
-  { Operations::initial, std::make_shared<Initial>() },
-  { Operations::add, std::make_shared<Addition>() },
-  { Operations::sub, std::make_shared<Subtraction>() },
-  { Operations::div, std::make_shared<Devision>() },
-  { Operations::mul, std::make_shared<Multiplication>() },
-  { Operations::unknown, std::make_shared<Unknown>() }
+std::unordered_map<Operations, std::shared_ptr<IState>> states {
+  { Operations::Initialization, std::make_shared<Initial>() },
+  { Operations::Addition,       std::make_shared<Addition>() },
+  { Operations::Subtraction,    std::make_shared<Subtraction>() },
+  { Operations::Division,       std::make_shared<Division>() },
+  { Operations::Multiplication, std::make_shared<Multiplication>() },
+  { Operations::AfterResult,    std::make_shared<AfterResult>() }
 };
 
 Calculator::Calculator(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::Widget)
+    , ui(new Ui::Widget), m_state(states[Operations::Initialization])
 {
-    ui->setupUi(this);    
-    m_state = states[Operations::initial];
-    for(auto&& child : ui->gOperaions->children()) {
+    ui->setupUi(this);
+    for(auto&& child : ui->gOperations->children()) {
         connect(qobject_cast<QPushButton*>(child), &QPushButton::clicked, this, &Calculator::onOperatorClick);
     }
 
@@ -28,51 +27,55 @@ Calculator::Calculator(QWidget *parent)
 }
 
 void Calculator::onOperatorClick() {
-    if(ui->eMain->text().isEmpty())
+    if(ui->tNumberField->text().isEmpty())
         return;
 
     QString text = qobject_cast<QPushButton*>(sender())->text();
     if(text == "+") {
-        m_state->setState(this, states[Operations::add]);
+        m_state->setState(this, states[Operations::Addition]);
     } else if (text == "-") {
-        m_state->setState(this, states[Operations::sub]);
+        m_state->setState(this, states[Operations::Subtraction]);
     } else if (text == "*") {
-        m_state->setState(this, states[Operations::mul]);
+        m_state->setState(this, states[Operations::Multiplication]);
     } else if (text == "/") {
-        m_state->setState(this, states[Operations::div]);
+        m_state->setState(this, states[Operations::Division]);
     } else if (text == "=") {
-        ui->eMain->setText(QString::number(m_prev_result));
+        ui->tNumberField->setText(QString::number(m_midterm));
         m_state->getResult(this);
+    } else if (text == "AC") {
+        ui->tNumberField->setText("0");
+        setMidterm(0);
+        m_state->setState(this, states[Operations::Initialization]);
     }
 
-    resetTextField();
+    resetNumberField();
 }
 
 void Calculator::onNumpadClick() {    
-    if(!checkTextField(m_text))
+    if(!checkTextField(m_number_field))
         return;
 
     QString sym = qobject_cast<QPushButton*>(sender())->text();
 
-    if(hasComma(m_text) && sym == ".")
+    if(hasComma(m_number_field) && sym == ".")
         return;
 
-    m_text.append(sym);
-    ui->eMain->setText(m_text);
+    m_number_field.append(sym);
+    ui->tNumberField->setText(m_number_field);
 }
 
 float Calculator::getNumberFromTextField() {
-    if(m_text.isEmpty())
+    if(m_number_field.isEmpty())
         return 0;
-    return m_text.toFloat();
+    return m_number_field.toFloat();
 }
 
-float Calculator::getPreviousResult() {
-    return m_prev_result;
+float Calculator::getMidterm() const {
+    return m_midterm;
 }
 
-void Calculator::setPreviousResult(float number) {
-    m_prev_result = number;
+void Calculator::setMidterm(float number) {
+    m_midterm = number;
 }
 
 Calculator::~Calculator()
@@ -81,11 +84,11 @@ Calculator::~Calculator()
 }
 
 void Calculator::setTextField(QString text) {
-    ui->eMain->setText(text);
+    ui->tNumberField->setText(text);
 }
 
-void Calculator::resetTextField() {
-    m_text.clear();
+void Calculator::resetNumberField() {
+    m_number_field.clear();
 }
 
 bool Calculator::checkTextField(QString text)
@@ -101,52 +104,48 @@ bool Calculator::hasComma(QString text)
     return text.contains('.');
 }
 
-void Initial::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
-    calculator->setPreviousResult(calculator->getNumberFromTextField());
+void Initial::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
+    calculator->setMidterm(calculator->getNumberFromTextField());
     calculator->setState(new_state);
-    calculator->resetTextField();
+    calculator->resetNumberField();
 }
 
 void Initial::getResult(Calculator *calculator) {
-    calculator->resetTextField();
+    calculator->resetNumberField();
 
 }
 
-void Unknown::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
+void AfterResult::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
     calculator->setState(new_state);
-    calculator->resetTextField();
+    calculator->resetNumberField();
 }
 
-void Unknown::getResult(Calculator* ) {
-
+void AfterResult::getResult(Calculator* ) {
+    // Empty method
 }
 
-void State::getResult(Calculator* calculator)
+void IState::getResult(Calculator* calculator)
 {
-    setState(calculator, states[Operations::unknown]);
-    calculator->setTextField(QString::number(calculator->getPreviousResult()));
+    setState(calculator, states[Operations::AfterResult]);
+    calculator->setTextField(QString::number(calculator->getMidterm()));
 }
 
-void Addition::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
-    float result = calculator->getPreviousResult() + calculator->getNumberFromTextField();
-    calculator->setPreviousResult(result);
+void Addition::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
+    calculator->setMidterm(calculator->getMidterm() + calculator->getNumberFromTextField());
     calculator->setState(new_state);
 }
 
-void Subtraction::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
-    float result = calculator->getPreviousResult() - calculator->getNumberFromTextField();
-    calculator->setPreviousResult(result);
+void Subtraction::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
+    calculator->setMidterm(calculator->getMidterm() - calculator->getNumberFromTextField());
     calculator->setState(new_state);
 }
 
-void Devision::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
-    float result = calculator->getPreviousResult() / calculator->getNumberFromTextField();
-    calculator->setPreviousResult(result);
+void Division::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
+    calculator->setMidterm(calculator->getMidterm() / calculator->getNumberFromTextField());
     calculator->setState(new_state);
 }
 
-void Multiplication::setState(Calculator* calculator, std::shared_ptr<State> new_state) {
-    float result = calculator->getPreviousResult() * calculator->getNumberFromTextField();
-    calculator->setPreviousResult(result);
+void Multiplication::setState(Calculator* calculator, std::shared_ptr<IState> new_state) {
+    calculator->setMidterm(calculator->getMidterm() * calculator->getNumberFromTextField());
     calculator->setState(new_state);
 }
